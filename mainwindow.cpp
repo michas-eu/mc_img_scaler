@@ -21,25 +21,44 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 void MainWindow::dropEvent(QDropEvent *e)
 {
 	QString tmp;
+	QUrl url;
+	QImage img;
 	if (!e->mimeData()->hasUrls()) return;
-	tmp = e->mimeData()->urls().first().toLocalFile();
-	this->mk_new_file(tmp);
+	foreach (url,e->mimeData()->urls()) {
+		tmp = url.toLocalFile();
+		img = this->mk_new_file(tmp);
+	}
+	this->show_image(img);
 	e->accept();
 }
 
-QString MainWindow::mk_new_file(QString file)
+QImage MainWindow::mk_new_file(QString file)
 {
-	QPixmap pix;
 	QImage img;
 	QString new_file;
 	this->ui->file_url->setText(file);
 	img.load(file);
 	img = this->scale(img,this->ui->mode_box->currentText());
-	new_file = file.append(".new.jpeg");
+	new_file = this->mk_new_file_name(file);
 	img.save(new_file,0,80);
+	return(img);
+}
+
+QString MainWindow::mk_new_file_name(QString file)
+{
+	QStringList parts;
+	parts = file.split(".");
+	parts.removeLast();
+	file = parts.join(".");
+	file.append(".small.jpeg");
+	return file;
+}
+
+void MainWindow::show_image(QImage img)
+{
+	QPixmap pix;
 	pix = QPixmap::fromImage(img);
 	this->ui->image_tester->setPixmap(pix);
-	return(file);
 }
 
 QImage MainWindow::scale(QImage img,QString mode)
@@ -53,8 +72,6 @@ QImage MainWindow::scale(QImage img,QString mode)
 	h = this->ui->h_box->value();
 	wa = (float)w/img.width();
 	ha = (float)h/img.height();
-//qDebug() << wa << ":" << ha << "\n";
-qDebug() << mode << "\n";
 	smooth = Qt::SmoothTransformation;
 	if (mode == mode.fromUtf8("Szerokość")) {
 		img = img.scaledToWidth(w,smooth);

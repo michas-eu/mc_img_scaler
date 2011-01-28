@@ -30,14 +30,16 @@ protected:
 	void dropEvent(QDropEvent *e);
 
 private slots:
-	QString mk_new_file(QString file);
+	QImage mk_new_file(QString file);
+	void show_image(QImage img);
+	void set_mode(QString mode);
 
 private:
+	Ui::MainWindow *ui;
 	QString ui_mode;
-	void set_mode(QString mode);
+	QString mk_new_file_name(QString file);
 	QImage scale(QImage img, QString mode);
 	QImage embed(QImage img, int w, int h, QRgb colour);
-	Ui::MainWindow *ui;
 	QString get_parm(QStringList list,QString str);
 };
 

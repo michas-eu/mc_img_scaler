@@ -6,12 +6,12 @@
 
 QT       += core gui
 
-TARGET = img_skaler
+TARGET = niuu
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+	mainwindow.cpp
 
 HEADERS  += mainwindow.hpp
 
